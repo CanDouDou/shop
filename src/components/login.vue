@@ -31,7 +31,7 @@ export default {
       console.log(res)
       const {data: {meta: {status, msg}}} = res
       if (status === 200) {
-          this.$router.push({path:"/"})
+        this.$router.push({path: '/'})
       } else {
         this.$message.error(msg)
       }
