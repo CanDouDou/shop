@@ -29,8 +29,9 @@ export default {
     async submit () {
       let res = await this.$axios.post('login', this.formdata)
       console.log(res)
-      const {data: {meta: {status, msg}}} = res
+      const {data: {meta: {status, msg}, data: {token}}} = res
       if (status === 200) {
+        localStorage.setItem('token', token)
         this.$router.push({path: '/'})
       } else {
         this.$message.error(msg)
