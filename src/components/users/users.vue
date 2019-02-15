@@ -13,10 +13,30 @@
                 <el-input placeholder="请输入内容" v-model="query" class="input-with-select" clearable @clear="clearTable()">
                     <el-button slot="append" icon="el-icon-search" @click="searchUser"></el-button>
                 </el-input>
-                <el-button type="success" plain>添加成员</el-button>
+                <el-button type="success" plain @click="dialogFormVisibleAdd = true">添加成员</el-button>
             </div>
-
         </el-row>
+        <!-- 对话框  添加用户 -->
+        <el-dialog title="添加用户" :visible.sync="dialogFormVisibleAdd">
+            <el-form label-position="right" :model="formdata" label-width="80px" :rules="rules">
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="formdata.username" :hide-required-asterisk="true"></el-input>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="formdata.password"></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="formdata.email"></el-input>
+                </el-form-item>
+                <el-form-item label="电话">
+                    <el-input v-model="formdata.mobile"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleAdd = false">取 消</el-button>
+                <el-button type="primary" @click="sureUser">确 定</el-button>
+            </div>
+        </el-dialog>
         <!-- 表格展示 -->
         <el-table ref="singleTable" :data="list" highlight-current-row @current-change="handleCurrentChange" style="width: 100%" class="users-table">
             <el-table-column type="index" width="80">
@@ -27,23 +47,25 @@
             </el-table-column>
             <el-table-column prop="mobile" label="电话" width="200">
             </el-table-column>
-            <el-table-column label="创建日期" width="240">
+            <el-table-column label="创建日期" width="200">
                 <template slot-scope="scope">
                     {{scope.row.create_time | frmdate}}
                 </template>
             </el-table-column>
             <el-table-column label="用户状态">
                 <template slot-scope="scope">
-                    <el-switch v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949">
+                    <el-switch @change="handleSwitchChange(scope.row)" v-model="scope.row.mg_state" active-color="#13ce66" inactive-color="#ff4949">
                     </el-switch>
                 </template>
             </el-table-column>
-            <el-table-column label="操作">
+            <el-table-column label="操作" width="500">
                 <template>
                     <el-row>
-                        <el-button size="mini" circle plain type="primary" icon="el-icon-edit"></el-button>
-                        <el-button size="mini" circle plain type="danger" icon="el-icon-delete"></el-button>
-                        <el-button size="mini" circle plain type="success" icon="el-icon-check"></el-button>
+                        <el-col>
+                            <el-button size="mini" circle plain type="primary" icon="el-icon-edit"></el-button>
+                            <el-button size="mini" circle plain type="danger" icon="el-icon-delete"></el-button>
+                            <el-button size="mini" circle plain type="success" icon="el-icon-check"></el-button>
+                        </el-col>
                     </el-row>
                 </template>
             </el-table-column>
@@ -65,23 +87,82 @@ export default {
       pagenum: 1,
       pagesize: 2,
       list: [],
-      total: 1
+      total: 1,
+      dialogFormVisibleAdd: false,
+      formdata: {
+        username: "",
+        password: "",
+        email: "",
+        mobile: ""
+      },
+      rules: {
+        username: [
+          { required: true, message: "请输入用户名", trigger: "blur" },
+          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ],
+        password: [
+          { required: true, message: "请输入密码", trigger: "blur" },
+          { min: 5, max: 16, message: "长度在 3 到 5 个字符", trigger: "blur" }
+        ]
+      }
     };
   },
   created() {
     this.getUserList();
   },
   methods: {
-      // 搜索用户
-      searchUser() {
-          this.pagenum = 1
-          this.getUserList()
-      },
-      //清空事件
-        clearTable() {
-            this.pagenum = 1
-            this.getUserList()
-        },
+    // 搜索用户
+    searchUser() {
+      this.pagenum = 1;
+      this.getUserList();
+    },
+    // 添加用户
+    async sureUser() {
+      this.$axios.defaults.headers.common[
+        "Authorization"
+      ] = localStorage.getItem("token");
+      const sureRes = await this.$axios.post("users", this.formdata);
+      const { data: { meta: { msg, status } } } = sureRes;
+      if (status == 201) {
+        this.$message({
+          message: msg,
+          type: "success"
+        });
+        this.dialogFormVisibleAdd = false;
+        this.formdata.username = "";
+        this.formdata.password = "";
+        this.formdata.email = "";
+        this.formdata.mobile = "";
+        this.pagenum = 1;
+        this.getUserList();
+      } else {
+        this.$message.error(msg);
+      }
+    },
+    // 改变用户状态
+    async handleSwitchChange(user) {
+      console.log(user.id);
+      this.$axios.defaults.headers.common[
+        "Authorization"
+      ] = localStorage.getItem("token");
+      const userStatus = await this.$axios.put(
+        `users/${user.id}/state/${user.mg_state}`
+      );
+      const {data:{meta:{msg,status}}} = userStatus
+      console.log(msg)
+      if (status === 200) {
+          this.$message({
+            message: msg,
+            type: 'success'
+        })
+      }
+      console.log(userStatus);
+    },
+    // 清空事件
+    clearTable() {
+      this.pagenum = 1;
+      this.getUserList();
+    },
     // 获取数据
     async getUserList() {
       this.$axios.defaults.headers.common[
@@ -91,29 +172,24 @@ export default {
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${
           this.pagesize
         }`
-      )
+      );
       const { data: { meta: { msg, status } } } = res;
       if (status === 200) {
         const { data: { data: { total, users } } } = res;
         this.list = users;
         this.total = total;
-      } else {
-        this.$message({
-          message: msg,
-          type: "warning"
-        });
       }
     },
     // 显示条数改变
     handleSizeChange(val) {
-      this.pagesize = val
-      this.pagenum = 1
-      this.getUserList()
+      this.pagesize = val;
+      this.pagenum = 1;
+      this.getUserList();
     },
     // 当前页数改变
     handleCurrentChange(val) {
-      this.pagenum = val
-      this.getUserList()
+      this.pagenum = val;
+      this.getUserList();
     }
   }
 };
@@ -135,6 +211,6 @@ export default {
   width: 400px;
 }
 .users-table {
-    margin-top: 20px;
+  margin-top: 20px;
 }
 </style>

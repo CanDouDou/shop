@@ -9,6 +9,7 @@ import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/base.css'
 import moment from 'moment'
 axios.defaults.baseURL = 'http://localhost:8888/api/private/v1/'
+axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
 Vue.config.productionTip = false
 
 Vue.use(ElementUI)
