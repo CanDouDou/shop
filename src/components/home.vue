@@ -20,7 +20,7 @@
             <el-container class="main">
                 <!-- 左侧边栏 -->
                 <el-aside width="200px" class="aside">
-                    <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" unique-opened="true" :router="true">
+                    <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :unique-opened="true" :router="true">
                         <el-submenu index="1">
                             <template slot="title">
                                 <i class="el-icon-location"></i>
@@ -100,50 +100,45 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       mens: []
-    };
-  },
-  beforeCreate() {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      this.$router.push({
-        path: "/login"
-      });
     }
   },
-  created() {
-    this.holdMenus();
+  beforeCreate () {
+    const token = localStorage.getItem('token')
+    if (!token) {
+      this.$router.push({
+        path: '/login'
+      })
+    }
+  },
+  created () {
+    this.holdMenus()
   },
   methods: {
     // 退出账户
-    exit() {
-      localStorage.clear();
+    exit () {
+      localStorage.clear()
       this.$router.push({
-        path: "/login"
-      });
+        path: '/login'
+      })
       this.$message({
-        message: "退出成功",
-        type: "success"
-      });
+        message: '退出成功',
+        type: 'success'
+      })
     },
-    async holdMenus() {
-      let data = await this.$axios.get("menus");
-      console.log(data);
-      //   this.$axios.get('menus').then(res => {
-      // console.log(res)
-      //   })
+    async holdMenus () {
+    //   let data = await this.$axios.get('menus')
     },
-    handleOpen(key, keyPath) {
-      //   console.log(this.list)
-      console.log(key, keyPath);
+    handleOpen (key, keyPath) {
+      console.log(key, keyPath)
     },
-    handleClose(key, keyPath) {
-      console.log(key, keyPath);
+    handleClose (key, keyPath) {
+      console.log(key, keyPath)
     }
   }
-};
+}
 </script>
 
 <style>

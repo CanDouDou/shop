@@ -31,7 +31,8 @@ export default {
       console.log(res)
       const {data: {meta: {status, msg}}} = res
       if (status === 200) {
-        const {data: {data: token}} = res
+        const token = res.data.data.token
+        console.log(token)
         localStorage.setItem('token', token)
         this.$router.push({path: '/'})
       } else {
