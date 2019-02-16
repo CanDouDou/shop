@@ -19,7 +19,7 @@
             <!-- 主干 -->
             <el-container class="main">
                 <!-- 左侧边栏 -->
-                <el-aside width="200px" class="aside">
+                <el-aside width="202px" class="aside">
                     <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :unique-opened="true" :router="true">
                         <el-submenu index="1">
                             <template slot="title">
