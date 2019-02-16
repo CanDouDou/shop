@@ -13,7 +13,7 @@
                 <el-input placeholder="请输入内容" v-model="query" class="input-with-select" clearable @clear="clearTable()">
                     <el-button slot="append" icon="el-icon-search" @click="searchUser"></el-button>
                 </el-input>
-                <el-button type="success" plain @click="dialogFormVisibleAdd = true">添加成员</el-button>
+                <el-button type="success" plain @click="addUser">添加成员</el-button>
             </div>
         </el-row>
         <!-- 对话框  添加用户 -->
@@ -59,18 +59,55 @@
                 </template>
             </el-table-column>
             <el-table-column label="操作" width="500">
-                <template>
+                <template slot-scope="scope">
                     <el-row>
                         <el-col>
-                            <el-button size="mini" circle plain type="primary" icon="el-icon-edit"></el-button>
-                            <el-button size="mini" circle plain type="danger" icon="el-icon-delete"></el-button>
-                            <el-button size="mini" circle plain type="success" icon="el-icon-check"></el-button>
+                            <el-button @click="editUserData(scope.row)" size="mini" circle plain type="primary" icon="el-icon-edit"></el-button>
+                            <el-button @click="deleteUser(scope.row)" size="mini" circle plain type="danger" icon="el-icon-delete"></el-button>
+                            <el-button @click="setRole(scope.row)" size="mini" circle plain type="success" icon="el-icon-check"></el-button>
                         </el-col>
                     </el-row>
                 </template>
             </el-table-column>
-
         </el-table>
+        <!-- 编辑对话框 -->
+        <el-dialog title="编辑用户" :visible.sync="dialogFormVisibleEdit">
+            <el-form label-position="right" :model="formdata" label-width="80px" :rules="rules">
+                <el-form-item label="用户名" prop="username">
+                    <el-input v-model="formdata.username" :hide-required-asterisk="true" disabled></el-input>
+                </el-form-item>
+                <el-form-item label="邮箱">
+                    <el-input v-model="formdata.email"></el-input>
+                </el-form-item>
+                <el-form-item label="电话">
+                    <el-input v-model="formdata.mobile"></el-input>
+                </el-form-item>
+            </el-form>
+            <div slot="footer" class="dialog-footer">
+                <el-button @click="dialogFormVisibleEdit = false">取 消</el-button>
+                <el-button type="primary" @click="editUser">确 定</el-button>
+            </div>
+        </el-dialog>
+        <!-- 分配角色对话框 -->
+        <el-dialog title="分配角色" :visible.sync="dialogFormVisibleSet">
+          <el-form label-width="80">
+            <el-form-item label="用户名">
+              {{formdata.username}}
+            </el-form-item>
+            <el-form-item label="角色">
+              <el-select v-model="selectVal" placeholder="请选择活动区域">
+                <el-option label="请选择" :value="-1"></el-option>
+                <el-option v-for="(item) in roles" :key="item.id" :label="item.roleName" :value="item.id">
+
+                </el-option>
+              </el-select>
+            </el-form-item>
+          </el-form>
+          <div slot="footer" class="dialog-footer">
+            <el-button @click="dialogFormVisibleSet = false">取 消</el-button>
+            <el-button type="primary" @click="setRoleSure">确 定</el-button>
+          </div>
+        </el-dialog>
         <!-- 分页功能 -->
         <div class="block">
             <el-pagination @size-change="handleSizeChange" @current-change="handleCurrentChange" :page-sizes="[2, 4, 6, 8]" :page-size="2" layout="total, sizes, prev, pager, next, jumper" :total="total">
@@ -89,6 +126,10 @@ export default {
       list: [],
       total: 1,
       dialogFormVisibleAdd: false,
+      dialogFormVisibleEdit: false,
+      dialogFormVisibleSet: false,
+      selectVal: -1,
+      roles: [],
       formdata: {
         username: "",
         password: "",
@@ -116,23 +157,21 @@ export default {
       this.pagenum = 1;
       this.getUserList();
     },
+    addUser() {
+      this.dialogFormVisibleAdd = true;
+      this.formdata = {};
+    },
     // 添加用户
     async sureUser() {
-      this.$axios.defaults.headers.common[
-        "Authorization"
-      ] = localStorage.getItem("token");
       const sureRes = await this.$axios.post("users", this.formdata);
       const { data: { meta: { msg, status } } } = sureRes;
-      if (status == 201) {
+      if (status === 201) {
         this.$message({
           message: msg,
           type: "success"
         });
         this.dialogFormVisibleAdd = false;
-        this.formdata.username = "";
-        this.formdata.password = "";
-        this.formdata.email = "";
-        this.formdata.mobile = "";
+        this.formdata = {};
         this.pagenum = 1;
         this.getUserList();
       } else {
@@ -141,39 +180,112 @@ export default {
     },
     // 改变用户状态
     async handleSwitchChange(user) {
-      console.log(user.id);
-      this.$axios.defaults.headers.common[
-        "Authorization"
-      ] = localStorage.getItem("token");
       const userStatus = await this.$axios.put(
         `users/${user.id}/state/${user.mg_state}`
       );
-      const {data:{meta:{msg,status}}} = userStatus
-      console.log(msg)
+      const { data: { meta: { msg, status } } } = userStatus;
       if (status === 200) {
-          this.$message({
-            message: msg,
-            type: 'success'
-        })
+        this.$message({
+          message: msg,
+          type: "success"
+        });
       }
-      console.log(userStatus);
     },
     // 清空事件
     clearTable() {
       this.pagenum = 1;
       this.getUserList();
     },
+    // 获取编辑用户数据
+    async editUserData(user) {
+      this.dialogFormVisibleEdit = true;
+      const editRes = await this.$axios.get("users/" + user.id);
+      this.formdata = user;
+    },
+    // 编辑用户
+    async editUser() {
+      this.dialogFormVisibleEdit = false;
+      const edit = await this.$axios.put(
+        "users/" + this.formdata.id,
+        this.formdata
+      );
+      console.log(edit);
+      const { data: { meta: { msg, status } } } = edit;
+      console.log(status);
+      if (status === 200) {
+        this.$message({
+          showClose: true,
+          message: msg,
+          type: "success"
+        });
+      } else if (status === 500) {
+        this.$message({
+          showClose: true,
+          message: msg,
+          type: "error"
+        });
+      }
+      this.getUserList();
+    },
+    // 删除用户
+    deleteUser(user) {
+      this.$confirm("此操作将删除该用户, 是否继续?", "提示", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(async () => {
+          const deleteRes = await this.$axios.delete(`users/${user.id}`);
+          console.log(deleteRes);
+          const { data: { meta: { msg, status } } } = deleteRes;
+          if (status === 200) {
+            this.pagenum = 1;
+            this.getUserList();
+            this.$message({
+              type: "success",
+              message: msg
+            });
+          }
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "已取消删除"
+          });
+        });
+    },
+    // 点击分配按钮
+    async setRole(user) {
+      const roleRes = await this.$axios.get(`roles`);
+      const { data: { data } } = roleRes;
+      this.roles = data;
+      this.dialogFormVisibleSet = true;
+      this.formdata = user;
+      const roleId = await this.$axios.get(`users/${user.id}`);
+      const { data: { data: { rid } } } = roleId;
+      this.selectVal = rid;
+    },
+    async setRoleSure() {
+      const resRole = await this.$axios.put(`users/${this.formdata.id}/role`, {
+        rid: this.selectVal
+      });
+      const { data: { meta: { msg, status } } } = resRole;
+      if (status === 200) {
+        this.dialogFormVisibleSet = false;
+        this.$message.success(msg);
+      }
+    },
     // 获取数据
     async getUserList() {
-      this.$axios.defaults.headers.common[
-        "Authorization"
-      ] = localStorage.getItem("token");
+      //   this.$axios.defaults.headers.common[
+      //     'Authorization'
+      //   ] = localStorage.getItem('token')
       let res = await this.$axios.get(
         `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${
           this.pagesize
         }`
       );
-      const { data: { meta: { msg, status } } } = res;
+      const { data: { meta: { status } } } = res;
       if (status === 200) {
         const { data: { data: { total, users } } } = res;
         this.list = users;
