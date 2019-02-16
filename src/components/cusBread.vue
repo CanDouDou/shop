@@ -8,9 +8,9 @@
 
 <script>
 export default {
-    name:'cusBread',
-    props:['leave1','leave2']
-};
+  name: 'cusBread',
+  props: ['leave1', 'leave2']
+}
 </script>
 
 <style>

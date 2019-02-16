@@ -118,9 +118,9 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
-      query: "",
+      query: '',
       pagenum: 1,
       pagesize: 2,
       list: [],
@@ -131,180 +131,174 @@ export default {
       selectVal: -1,
       roles: [],
       formdata: {
-        username: "",
-        password: "",
-        email: "",
-        mobile: ""
+        username: '',
+        password: '',
+        email: '',
+        mobile: ''
       },
       rules: {
         username: [
-          { required: true, message: "请输入用户名", trigger: "blur" },
-          { min: 3, max: 5, message: "长度在 3 到 5 个字符", trigger: "blur" }
+          { required: true, message: '请输入用户名', trigger: 'blur' },
+          { min: 3, max: 5, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ],
         password: [
-          { required: true, message: "请输入密码", trigger: "blur" },
-          { min: 5, max: 16, message: "长度在 3 到 5 个字符", trigger: "blur" }
+          { required: true, message: '请输入密码', trigger: 'blur' },
+          { min: 5, max: 16, message: '长度在 3 到 5 个字符', trigger: 'blur' }
         ]
       }
-    };
+    }
   },
-  created() {
-    this.getUserList();
+  created () {
+    this.getUserList()
   },
   methods: {
     // 搜索用户
-    searchUser() {
-      this.pagenum = 1;
-      this.getUserList();
+    searchUser () {
+      this.pagenum = 1
+      this.getUserList()
     },
-    addUser() {
-      this.dialogFormVisibleAdd = true;
-      this.formdata = {};
+    addUser () {
+      this.dialogFormVisibleAdd = true
+      this.formdata = {}
     },
     // 添加用户
-    async sureUser() {
-      const sureRes = await this.$axios.post("users", this.formdata);
-      const { data: { meta: { msg, status } } } = sureRes;
+    async sureUser () {
+      const sureRes = await this.$axios.post('users', this.formdata)
+      const { data: { meta: { msg, status } } } = sureRes
       if (status === 201) {
         this.$message({
           message: msg,
-          type: "success"
-        });
-        this.dialogFormVisibleAdd = false;
-        this.formdata = {};
-        this.pagenum = 1;
-        this.getUserList();
+          type: 'success'
+        })
+        this.dialogFormVisibleAdd = false
+        this.formdata = {}
+        this.pagenum = 1
+        this.getUserList()
       } else {
-        this.$message.error(msg);
+        this.$message.error(msg)
       }
     },
     // 改变用户状态
-    async handleSwitchChange(user) {
+    async handleSwitchChange (user) {
       const userStatus = await this.$axios.put(
         `users/${user.id}/state/${user.mg_state}`
-      );
-      const { data: { meta: { msg, status } } } = userStatus;
+      )
+      const { data: { meta: { msg, status } } } = userStatus
       if (status === 200) {
         this.$message({
           message: msg,
-          type: "success"
-        });
+          type: 'success'
+        })
       }
     },
     // 清空事件
-    clearTable() {
-      this.pagenum = 1;
-      this.getUserList();
+    clearTable () {
+      this.pagenum = 1
+      this.getUserList()
     },
     // 获取编辑用户数据
-    async editUserData(user) {
-      this.dialogFormVisibleEdit = true;
-      const editRes = await this.$axios.get("users/" + user.id);
-      this.formdata = user;
+    async editUserData (user) {
+      this.dialogFormVisibleEdit = true
+      this.formdata = user
     },
     // 编辑用户
-    async editUser() {
-      this.dialogFormVisibleEdit = false;
+    async editUser () {
+      this.dialogFormVisibleEdit = false
       const edit = await this.$axios.put(
-        "users/" + this.formdata.id,
+        'users/' + this.formdata.id,
         this.formdata
-      );
-      console.log(edit);
-      const { data: { meta: { msg, status } } } = edit;
-      console.log(status);
+      )
+      console.log(edit)
+      const { data: { meta: { msg, status } } } = edit
+      console.log(status)
       if (status === 200) {
         this.$message({
           showClose: true,
           message: msg,
-          type: "success"
-        });
+          type: 'success'
+        })
       } else if (status === 500) {
         this.$message({
           showClose: true,
           message: msg,
-          type: "error"
-        });
+          type: 'error'
+        })
       }
-      this.getUserList();
+      this.getUserList()
     },
     // 删除用户
-    deleteUser(user) {
-      this.$confirm("此操作将删除该用户, 是否继续?", "提示", {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "warning"
+    deleteUser (user) {
+      this.$confirm('此操作将删除该用户, 是否继续?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning'
       })
         .then(async () => {
-          const deleteRes = await this.$axios.delete(`users/${user.id}`);
-          console.log(deleteRes);
-          const { data: { meta: { msg, status } } } = deleteRes;
+          const deleteRes = await this.$axios.delete(`users/${user.id}`)
+          console.log(deleteRes)
+          const { data: { meta: { msg, status } } } = deleteRes
           if (status === 200) {
-            this.pagenum = 1;
-            this.getUserList();
+            this.pagenum = 1
+            this.getUserList()
             this.$message({
-              type: "success",
+              type: 'success',
               message: msg
-            });
+            })
           }
         })
         .catch(() => {
           this.$message({
-            type: "info",
-            message: "已取消删除"
-          });
-        });
+            type: 'info',
+            message: '已取消删除'
+          })
+        })
     },
     // 点击分配按钮
-    async setRole(user) {
-      const roleRes = await this.$axios.get(`roles`);
-      const { data: { data } } = roleRes;
-      this.roles = data;
-      this.dialogFormVisibleSet = true;
-      this.formdata = user;
-      const roleId = await this.$axios.get(`users/${user.id}`);
-      const { data: { data: { rid } } } = roleId;
-      this.selectVal = rid;
+    async setRole (user) {
+      const roleRes = await this.$axios.get(`roles`)
+      const { data: { data } } = roleRes
+      this.roles = data
+      this.dialogFormVisibleSet = true
+      this.formdata = user
+      const roleId = await this.$axios.get(`users/${user.id}`)
+      const { data: { data: { rid } } } = roleId
+      this.selectVal = rid
     },
-    async setRoleSure() {
+    async setRoleSure () {
       const resRole = await this.$axios.put(`users/${this.formdata.id}/role`, {
         rid: this.selectVal
-      });
-      const { data: { meta: { msg, status } } } = resRole;
+      })
+      const { data: { meta: { msg, status } } } = resRole
       if (status === 200) {
-        this.dialogFormVisibleSet = false;
-        this.$message.success(msg);
+        this.dialogFormVisibleSet = false
+        this.$message.success(msg)
       }
     },
     // 获取数据
-    async getUserList() {
-      //   this.$axios.defaults.headers.common[
-      //     'Authorization'
-      //   ] = localStorage.getItem('token')
-      let res = await this.$axios.get(
-        `users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${
-          this.pagesize
-        }`
-      );
-      const { data: { meta: { status } } } = res;
+    async getUserList () {
+      this.$axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
+      const res = await this.$axios.get(`users?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`)
+      const { data: { meta: { status } } } = res
+      console.log(res)
       if (status === 200) {
-        const { data: { data: { total, users } } } = res;
-        this.list = users;
-        this.total = total;
+        const { data: { data: { total, users } } } = res
+        this.list = users
+        this.total = total
       }
     },
     // 显示条数改变
-    handleSizeChange(val) {
-      this.pagesize = val;
-      this.pagenum = 1;
-      this.getUserList();
+    handleSizeChange (val) {
+      this.pagesize = val
+      this.pagenum = 1
+      this.getUserList()
     },
     // 当前页数改变
-    handleCurrentChange(val) {
-      this.pagenum = val;
-      this.getUserList();
+    handleCurrentChange (val) {
+      this.pagenum = val
+      this.getUserList()
     }
   }
-};
+}
 </script>
 
 <style>
