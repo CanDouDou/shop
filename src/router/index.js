@@ -53,7 +53,7 @@ export default new Router({
         path: '/goodsadd',
         component: goodsadd
       }
-    ]
+      ]
     }
   ]
 })

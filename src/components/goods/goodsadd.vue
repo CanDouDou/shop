@@ -13,6 +13,12 @@
             <el-step title="商品图片"></el-step>
             <el-step title="商品内容"></el-step>
         </el-steps>
+        <el-tabs v-model="activeName" @tab-click="handleClick">
+            <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
+            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
+            <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
+            <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
+        </el-tabs>
     </el-card>
 </template>
 
@@ -36,7 +42,7 @@ export default {}
 .info {
   margin-bottom: 26px;
 }
-.step{
-    margin-top: 15px;
+.step {
+  margin-top: 15px;
 }
 </style>

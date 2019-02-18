@@ -46,7 +46,7 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       query: '',
       pagenum: 1,
@@ -55,32 +55,32 @@ export default {
       total: 100
     }
   },
-  created(){
-      this.getGoodsList()
+  created () {
+    this.getGoodsList()
   },
   methods: {
-      // 获取商品数据
-    async getGoodsList() {
+    // 获取商品数据
+    async getGoodsList () {
       const res = await this.$axios.get(`goods/?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`)
-      const {data:{meta:{status}}} = res
-      if (status === 200){
-          const {data:{data:{goods,total}}} = res
-          this.goodsList = goods
-          this.total = total
+      const {data: {meta: {status}}} = res
+      if (status === 200) {
+        const {data: {data: {goods, total}}} = res
+        this.goodsList = goods
+        this.total = total
       }
     },
     // 添加商品
-    goodsAdd(){
-        this.$router.push({path:'/goodsadd'})
+    goodsAdd () {
+      this.$router.push({path: '/goodsadd'})
     },
     // 显示条数改变
-    handleSizeChange(val) {
+    handleSizeChange (val) {
       this.pagesize = val
       this.pagenum = 1
       this.getGoodsList()
     },
     // 当前页数改变
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.pagenum = val
       this.getGoodsList()
     }

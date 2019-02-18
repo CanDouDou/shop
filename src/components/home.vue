@@ -21,68 +21,17 @@
                 <!-- 左侧边栏 -->
                 <el-aside width="202px" class="aside">
                     <el-menu default-active="2" class="el-menu-vertical-demo" @open="handleOpen" @close="handleClose" :unique-opened="true" :router="true">
-                        <el-submenu index="1">
+                        <el-submenu :index="item.id+''" v-for="(item) in menus" :key="item.order">
                             <template slot="title">
                                 <i class="el-icon-location"></i>
-                                <span @click="holdMenus">用户管理</span>
+                                <span @click="holdMenus">{{item.authName}}</span>
                             </template>
-                            <el-menu-item index="users">
+                            <el-menu-item :index="item2.path+''" v-for="(item2,i) in item.children" :key="i">
                                 <i class="el-icon-menu"></i>
-                                用户列表
+                                {{item2.authName}}
                             </el-menu-item>
                         </el-submenu>
-                        <el-submenu index="2">
-                            <template slot="title">
-                                <i class="el-icon-location"></i>
-                                <span @click="holdMenus">权限管理</span>
-                            </template>
-                            <el-menu-item index="roles">
-                                <i class="el-icon-menu"></i>
-                                角色列表
-                            </el-menu-item>
-                            <el-menu-item index="rights">
-                                <i class="el-icon-menu"></i>
-                                权限列表
-                            </el-menu-item>
-                        </el-submenu>
-                        <el-submenu index="3">
-                            <template slot="title">
-                                <i class="el-icon-location"></i>
-                                <span @click="holdMenus">商品管理</span>
-                            </template>
-                            <el-menu-item index="goods">
-                                <i class="el-icon-menu"></i>
-                                商品列表
-                            </el-menu-item>
-                            <el-menu-item index="params">
-                                <i class="el-icon-menu"></i>
-                                分类参数
-                            </el-menu-item>
-                            <el-menu-item index="categories">
-                                <i class="el-icon-menu"></i>
-                                商品分类
-                            </el-menu-item>
-                        </el-submenu>
-                        <el-submenu index="4">
-                            <template slot="title">
-                                <i class="el-icon-location"></i>
-                                <span @click="holdMenus">订单管理</span>
-                            </template>
-                            <el-menu-item index="4-1">
-                                <i class="el-icon-menu"></i>
-                                订单列表
-                            </el-menu-item>
-                        </el-submenu>
-                        <el-submenu index="5">
-                            <template slot="title">
-                                <i class="el-icon-location"></i>
-                                <span @click="holdMenus">数据统计</span>
-                            </template>
-                            <el-menu-item index="5-1">
-                                <i class="el-icon-menu"></i>
-                                数据报表
-                            </el-menu-item>
-                        </el-submenu>
+
                     </el-menu>
                 </el-aside>
                 <!-- 右主体内容 -->
@@ -91,14 +40,13 @@
                 </el-main>
             </el-container>
         </el-container>
-
     </div>
 </template>
 <script>
 export default {
   data () {
     return {
-      mens: []
+      menus: []
     }
   },
   beforeCreate () {
@@ -110,9 +58,20 @@ export default {
     }
   },
   created () {
+    this.getSide()
     this.holdMenus()
   },
   methods: {
+    // 获取侧边栏数据
+    async getSide () {
+      const res = await this.$axios.get(`menus`)
+      const {meta: {status}} = res.data
+      if (status === 200) {
+        const {data} = res.data
+        this.menus = data
+      }
+      console.log(this.menus)
+    },
     // 退出账户
     exit () {
       localStorage.clear()
@@ -125,7 +84,7 @@ export default {
       })
     },
     async holdMenus () {
-    //   let data = await this.$axios.get('menus')
+      //   let data = await this.$axios.get('menus')
     },
     handleOpen (key, keyPath) {
       console.log(key, keyPath)
