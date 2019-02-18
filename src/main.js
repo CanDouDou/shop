@@ -3,8 +3,9 @@
 import Vue from 'vue'
 import App from './App'
 import router from './router'
-
+import echarts from 'echarts'
 import ElementUI from 'element-ui'
+
 import axiosVue from './http-axios'
 import 'element-ui/lib/theme-chalk/index.css'
 import './assets/css/base.css'
@@ -12,6 +13,7 @@ import moment from 'moment'
 import cusBread from './components/cusBread'
 
 Vue.config.productionTip = false
+Vue.prototype.$echarts = echarts
 
 Vue.use(ElementUI)
 Vue.use(axiosVue)

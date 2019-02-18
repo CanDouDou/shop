@@ -56,6 +56,7 @@ export default {
   methods: {
     // 获取侧边栏数据
     async getSide () {
+      // localStorage.clear()
       const res = await this.$axios.get(`menus`)
       const {meta: {status}} = res.data
       if (status === 200) {

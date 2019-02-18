@@ -7,7 +7,7 @@ axiosVue.install = function (Vue) {
   axios.interceptors.request.use(function (config) {
     // Do something before request is sent
     if (config.url !== 'login') {
-      axios.defaults.headers.common['Authorization'] = localStorage.getItem('token')
+      config.headers.common['Authorization'] = localStorage.getItem('token')
     }
     return config
   }, function (error) {

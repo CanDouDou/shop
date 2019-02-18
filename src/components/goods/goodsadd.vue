@@ -53,7 +53,7 @@
 </template>
 <script>
 export default {
-  data() {
+  data () {
     return {
       activeName: 'first',
       formgoods: [],
@@ -72,14 +72,14 @@ export default {
     }
   },
   methods: {
-    handleClick(tab, event) {
+    handleClick (tab, event) {
       console.log(tab, event)
     },
     // 删除已上传的图片
-    handleRemove(file, fileList) {
+    handleRemove (file, fileList) {
       console.log(file, fileList)
     },
-    handlePreview(file) {
+    handlePreview (file) {
       console.log(file)
     }
   }

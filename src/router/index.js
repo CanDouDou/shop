@@ -14,7 +14,7 @@ import goods from '../components/goods/goods.vue'
 import params from '../components/goods/params.vue'
 import goodsadd from '../components/goods/goodsadd.vue'
 
-// 导航守卫
+import reports from '../components/report/reports.vue'
 
 Vue.use(Router)
 const router = new Router({
@@ -62,12 +62,17 @@ const router = new Router({
         name: 'goodsadd',
         path: '/goodsadd',
         component: goodsadd
+      },
+      {
+        name: 'reports',
+        path: '/reports',
+        component: reports
       }
       ]
     }
   ]
 })
-
+// 导航守卫
 router.beforeEach((to, from, next) => {
   if (to.name === 'login') {
     next()
@@ -78,11 +83,9 @@ router.beforeEach((to, from, next) => {
         name: 'login'
       })
       Message.warning('请先登录')
-      return
     } else {
       next()
     }
   }
-  console.log(to, from)
 })
 export default router
