@@ -7,7 +7,7 @@
                 <el-input placeholder="请输入内容" v-model="query" class="input-with-select" clearable>
                     <el-button slot="append" icon="el-icon-search"></el-button>
                 </el-input>
-                <el-button type="success" plain>添加商品</el-button>
+                <el-button type="success" plain @click="goodsAdd">添加商品</el-button>
             </div>
         </el-row>
         <!-- 表格展示 -->
@@ -59,6 +59,7 @@ export default {
       this.getGoodsList()
   },
   methods: {
+      // 获取商品数据
     async getGoodsList() {
       const res = await this.$axios.get(`goods/?query=${this.query}&pagenum=${this.pagenum}&pagesize=${this.pagesize}`)
       const {data:{meta:{status}}} = res
@@ -67,7 +68,10 @@ export default {
           this.goodsList = goods
           this.total = total
       }
-      console.log(res)
+    },
+    // 添加商品
+    goodsAdd(){
+        this.$router.push({path:'/goodsadd'})
     },
     // 显示条数改变
     handleSizeChange(val) {
