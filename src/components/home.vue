@@ -49,14 +49,6 @@ export default {
       menus: []
     }
   },
-  beforeCreate () {
-    const token = localStorage.getItem('token')
-    if (!token) {
-      this.$router.push({
-        path: '/login'
-      })
-    }
-  },
   created () {
     this.getSide()
     this.holdMenus()
