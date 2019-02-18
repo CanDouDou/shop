@@ -35,19 +35,12 @@
                 </el-form>
             </el-tab-pane>
             <el-tab-pane label="商品参数" name="second">
-
             </el-tab-pane>
             <el-tab-pane label="商品属性" name="third">
 
             </el-tab-pane>
             <el-tab-pane label="商品图片" name="fourth">
-                <el-upload 
-                class="upload-demo" 
-                action="https://jsonplaceholder.typicode.com/posts/" 
-                :on-preview="handlePreview" 
-                :on-remove="handleRemove" 
-                :file-list="fileList2" 
-                list-type="picture">
+                <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList2" list-type="picture">
                     <el-button size="small" type="primary">点击上传</el-button>
                 </el-upload>
             </el-tab-pane>
@@ -61,7 +54,18 @@ export default {
     return {
       activeName: 'first',
       formgoods: [],
-      fileList2: [{name: 'food.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}, {name: 'food2.jpeg', url: 'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'}]
+      fileList2: [
+        {
+          name: 'food.jpeg',
+          url:
+            'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        },
+        {
+          name: 'food2.jpeg',
+          url:
+            'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
+        }
+      ]
     }
   },
   methods: {
@@ -70,11 +74,11 @@ export default {
     },
     // 删除已上传的图片
     handleRemove(file, fileList) {
-        console.log(file, fileList);
-      },
-      handlePreview(file) {
-        console.log(file);
-      }
+      console.log(file, fileList)
+    },
+    handlePreview(file) {
+      console.log(file)
+    }
   }
 }
 </script>
