@@ -20,7 +20,7 @@ Vue.use(Router)
 const router = new Router({
   routes: [
     {
-      name:'login',
+      name: 'login',
       path: '/login',
       component: Login
     },
@@ -29,22 +29,22 @@ const router = new Router({
       path: '/',
       component: Home,
       children: [{
-        name:'users',
+        name: 'users',
         path: '/users',
         component: users
       },
       {
-        name:'rights',
+        name: 'rights',
         path: '/rights',
         component: rights
       },
       {
-        name:'roles',
+        name: 'roles',
         path: '/roles',
         component: roles
       },
       {
-        name:'users',
+        name: 'users',
         path: '/categories',
         component: categories
       },
@@ -68,9 +68,8 @@ const router = new Router({
   ]
 })
 
-
 router.beforeEach((to, from, next) => {
-  if(to.name === 'login') {
+  if (to.name === 'login') {
     next()
   } else {
     const token = localStorage.getItem('token')
@@ -79,11 +78,11 @@ router.beforeEach((to, from, next) => {
         name: 'login'
       })
       Message.warning('请先登录')
-      return;
+      return
     } else {
-      next();
+      next()
     }
   }
-  console.log(to,from)
+  console.log(to, from)
 })
 export default router
