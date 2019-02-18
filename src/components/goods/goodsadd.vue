@@ -13,46 +13,42 @@
             <el-step title="商品图片"></el-step>
             <el-step title="商品内容"></el-step>
         </el-steps>
-        <el-tabs v-model="activeName" @tab-click="handleClick">
-            <el-tab-pane label="用户管理" name="first">用户管理</el-tab-pane>
-            <el-tab-pane label="配置管理" name="second">配置管理</el-tab-pane>
-            <el-tab-pane label="角色管理" name="third">角色管理</el-tab-pane>
-            <el-tab-pane label="定时任务补偿" name="fourth">定时任务补偿</el-tab-pane>
-            <!-- 标签页 -->
-            <el-tabs v-model="activeName" @tab-click="handleClick" tabPosition="left">
-                <el-tab-pane label="基本信息" name="first">
-                    <el-form label-position="top" :model="formgoods" class="badeInfo">
-                        <el-form-item label="商品名称">
-                            <el-input v-model="formgoods.name"></el-input>
-                        </el-form-item>
-                        <el-form-item label="商品价格">
-                            <el-input v-model="formgoods.region"></el-input>
-                        </el-form-item>
-                        <el-form-item label="商品重量">
-                            <el-input v-model="formgoods.type"></el-input>
-                        </el-form-item>
-                        <el-form-item label="商品数量">
-                            <el-input v-model="formgoods.type"></el-input>
-                        </el-form-item>
-                        <el-form-item label="商品分类">
 
-                        </el-form-item>
-                    </el-form>
-                </el-tab-pane>
-                <el-tab-pane label="商品参数" name="second">
+        <!-- 标签页 -->
+        <el-tabs v-model="activeName" @tab-click="handleClick" tabPosition="left">
+            <el-tab-pane label="基本信息" name="first">
+                <el-form label-position="top" :model="formgoods" class="badeInfo">
+                    <el-form-item label="商品名称">
+                        <el-input v-model="formgoods.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品价格">
+                        <el-input v-model="formgoods.region"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品重量">
+                        <el-input v-model="formgoods.type"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品数量">
+                        <el-input v-model="formgoods.type"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品分类">
 
-                </el-tab-pane>
-                <el-tab-pane label="商品属性" name="third">
+                    </el-form-item>
+                </el-form>
+            </el-tab-pane>
+            <el-tab-pane label="商品参数" name="second">
 
-                </el-tab-pane>
-                <el-tab-pane label="商品图片" name="fourth">
-                    <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList2" list-type="picture">
-                        <el-button size="small" type="primary">点击上传</el-button>
-                    </el-upload>
-                </el-tab-pane>
-                <el-tab-pane label="商品内容" name="five">定时任务补偿</el-tab-pane>
-            </el-tabs>
+            </el-tab-pane>
+            <el-tab-pane label="商品属性" name="third">
+
+            </el-tab-pane>
+            <el-tab-pane label="商品图片" name="fourth">
+                <el-upload class="upload-demo" action="https://jsonplaceholder.typicode.com/posts/" :on-preview="handlePreview" :on-remove="handleRemove" :file-list="fileList2" list-type="picture">
+                    <el-button size="small" type="primary">点击上传</el-button>
+                </el-upload>
+            </el-tab-pane>
+            <el-tab-pane label="商品内容" name="five">定时任务补偿</el-tab-pane>
         </el-tabs>
+
     </el-card>
 </template>
 <script>
