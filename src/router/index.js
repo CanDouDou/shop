@@ -14,6 +14,8 @@ import goods from '../components/goods/goods.vue'
 import params from '../components/goods/params.vue'
 import goodsadd from '../components/goods/goodsadd.vue'
 
+import orders from '../components/orders/orders.vue'
+
 import reports from '../components/report/reports.vue'
 
 Vue.use(Router)
@@ -62,6 +64,11 @@ const router = new Router({
         name: 'goodsadd',
         path: '/goodsadd',
         component: goodsadd
+      },
+      {
+        path: '/orders',
+        name: 'orders',
+        component: orders
       },
       {
         name: 'reports',
