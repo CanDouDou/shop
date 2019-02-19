@@ -37,20 +37,20 @@
 
 <script>
 export default {
-  data() {
+  data () {
     return {
       goodlist: [],
       pagenum: 1,
       pagesize: 10,
       total: 10,
-      consignee_addr:''
+      consignee_addr: ''
     }
   },
-  created() {
+  created () {
     this.getgoods()
   },
   methods: {
-    async getgoods() {
+    async getgoods () {
       const res = await this.$axios.get(
         `orders?pagenum=${this.pagenum}&pagesize=${this.pagesize}`
       )
@@ -65,13 +65,13 @@ export default {
       }
     },
     // pagesize改变
-    handleSizeChange(val) {
-        this.pagesize = val
+    handleSizeChange (val) {
+      this.pagesize = val
       this.pagenum = 1
       this.getgoods()
     },
     // pagenum改变
-    handleCurrentChange(val) {
+    handleCurrentChange (val) {
       this.pagenum = val
       this.getgoods()
     }
