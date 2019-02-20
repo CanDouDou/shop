@@ -86,18 +86,18 @@ export default {
     async getRolesList () {
       const res = await this.$axios.get(`roles`)
       const { data: { meta: { status } } } = res
-      console.log(res.data.data)
+      // console.log(res.data.data)
       if (status === 200) {
         const { data: { data } } = res
         this.list = data
-        console.log(this.list)
+        // console.log(this.list)
       }
     },
     // 树状权限展示（对话框）
     async openRight (user) {
       this.roleID = user.id
       let arrayID = []
-      console.log(user.children.length)
+      // console.log(user.children.length)
       // 一级权限个数  len1
       for (var i = 0, len1 = user.children.length; i < len1; i++) {
         let obj = user.children[i]

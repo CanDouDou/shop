@@ -73,7 +73,7 @@ import 'quill/dist/quill.bubble.css'
 import { quillEditor } from 'vue-quill-editor'
 
 export default {
-  data() {
+  data () {
     return {
       active: '1',
       form: {
@@ -103,12 +103,12 @@ export default {
       }
     }
   },
-  created() {
+  created () {
     this.getcatalist()
   },
   methods: {
     // 点击tab触发事件
-    async tabclick() {
+    async tabclick () {
       if (this.active === '2' || this.active === '3') {
         if (this.selectedOptions2.length !== 3) {
           this.$message.error('请选择商品的三级分类')
@@ -143,7 +143,7 @@ export default {
       }
     },
     // 获取商品分类
-    async getcatalist() {
+    async getcatalist () {
       const res = await this.$axios.get(`categories`)
       const { data: { meta: { status, msg }, data } } = res
       if (status === 200) {
@@ -153,9 +153,9 @@ export default {
       }
     },
     //
-    handleChange() {},
+    handleChange () {},
     // 删除图片
-    handleRemove(file, fileList) {
+    handleRemove (file, fileList) {
       // console.log(file)
       this.pics = []
       fileList.forEach(item => {
@@ -165,9 +165,9 @@ export default {
       })
     },
     // 上传图片
-    handlePreview(response, file, filelist) {
+    handlePreview (response, file, filelist) {
       this.pics = []
-      if (response.meta.status == 200) {
+      if (response.meta.status === 200) {
         filelist.forEach(item => {
           var obj = {}
           obj.pic = item.response.data.tmp_path
@@ -178,18 +178,18 @@ export default {
       }
     },
     // 添加商品
-    async submitGoods() {
-      this.attrs = [...this.manydata,...this.onlydata]
+    async submitGoods () {
+      this.attrs = [...this.manydata, ...this.onlydata]
       this.form.goods_cat = this.selectedOptions2.join(',')
       console.log(this.form)
-      const res = await this.$axios.post(`goods`,this.form)
-      const {data:{meta:{status,msg}}} = res
+      const res = await this.$axios.post(`goods`, this.form)
+      const {data: {meta: {status, msg}}} = res
       if (status === 201) {
         this.$router.push({
           path: '/goods'
         })
-          this.$message.success(msg)
-      } else if(status === 400) {
+        this.$message.success(msg)
+      } else if (status === 400) {
         this.$message.error(msg)
       }
     }
